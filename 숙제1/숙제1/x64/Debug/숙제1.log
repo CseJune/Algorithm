@@ -1,0 +1,3 @@
+﻿  연습장.cpp
+C:\Users\zerok\OneDrive\바탕 화면\언리얼 프로젝트\12.23\숙제1\숙제1\연습장.cpp(15,13): warning C4244: 'return': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  숙제1.vcxproj -> C:\Users\zerok\OneDrive\바탕 화면\언리얼 프로젝트\12.23\숙제1\x64\Debug\숙제1.exe
