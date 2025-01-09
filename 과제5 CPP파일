@@ -1,0 +1,69 @@
+     // 프로젝트 이름에 따라 수정하십시오.
+#include "MyActor.h"
+#include "Math/UnrealMathUtility.h" 
+#include "Engine/World.h" 
+#include "Logging/LogMacros.h"
+
+// Sets default values
+AMyActor::AMyActor()
+{
+    PrimaryActorTick.bCanEverTick = true;
+    CurrentPosition = FVector(0.f, 0.f, 0.f); // 시작점 (0, 0)
+}
+
+// Called when the game starts or when spawned
+void AMyActor::BeginPlay()
+{
+    Super::BeginPlay();
+    Move(); // 게임이 시작되면 Move함수 호출   
+}
+
+// Step 함수: 랜덤으로 -1, 0 또는 1을 반환한다.
+int32 AMyActor::Step() {
+    return FMath::RandRange(-1, 1);
+}
+
+// Move 함수: 현재 좌표 업데이트 및 로그 출력 
+void AMyActor::Move() {
+    float TotalDistance = 0.0f; // 총 이동거리 초기화
+    int32 EventCount = 0; // 이벤트 횟수 초기화
+    FVector PreviousPosition = CurrentPosition; // 이전위치 저장
+
+    for (int32 i = 0; i < 10; ++i) {
+        int32 XStep = Step();
+        int32 YStep = Step();
+
+        FVector NewPosition(CurrentPosition.X + XStep, CurrentPosition.Y + YStep, CurrentPosition.Z);
+
+        if (FMath::Abs(NewPosition.X) < 10 && FMath::Abs(NewPosition.Y) < 10)
+        {
+            float DistanceMoved = FVector::Dist(CurrentPosition, NewPosition); //이동 거리 계산
+            UE_LOG(LogTemp, Warning, TEXT("Current Position : (%f,%f). MovingNow"), CurrentPosition.X, CurrentPosition.Y);
+
+            TotalDistance += DistanceMoved;
+            CurrentPosition = NewPosition;
+            //랜덤하게 사건 발생 여부 결정 (50%확률)
+            if (FMath::RandBool())
+            {
+                EventCount++;
+                UE_LOG(LogTemp, Warning, TEXT("Step %d: Moved %.2f units. Event Occurred!"), i + 1, DistanceMoved);
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Step %d: Moved %.2f units. No Event."), i + 1, DistanceMoved);
+            }
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("이동 불가: (%d,%d). 현재 위치 유지: (%f,%f)"), XStep, YStep, CurrentPosition.X, CurrentPosition.Y);
+        }
+    }
+    UE_LOG(LogTemp, Warning, TEXT("\nTotal Distance : %.2f"), TotalDistance);
+    UE_LOG(LogTemp, Warning, TEXT("Total Events : %d"), EventCount);
+}
+
+// Called every frame
+void AMyActor::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+}
